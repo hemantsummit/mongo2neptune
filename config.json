@@ -1,0 +1,226 @@
+{
+    "source_folder": ".source",
+    "data_folder": ".data",
+    "s3_bucket": "",
+    "s3_conf_folder": "",
+    "s3_source_folder": "",
+    "s3_data_folder": "",
+    "fileNames": [
+        "data.csv"
+    ],
+    "nodes": [
+        {
+            "csvFileName": "entityId.csv",
+            "select": "'entityId' in row and row['entityId'] != ''",
+            "id": "row['entityId']",
+            "label": "'Entity_Id'",
+            "uniqueKey": "row['entityId']",
+            "properties": [
+                {
+                    "property": "Fraud",
+                    "dataType": "Bool",
+                    "value": "row['entityId']"
+                },
+                {
+                    "property": "Entity_Type",
+                    "value": "row['entityType']"
+                }
+            ]
+        },
+        {
+            "csvFileName": "TIN.csv",
+            "select": "'tin.value' in row and row['tin.value'] != ''",
+            "id": "row['tin.value']",
+            "label": "'TIN'",
+            "uniqueKey": "row['tin.value']",
+            "properties": [
+                {
+                    "property": "Fraud",
+                    "dataType": "Bool",
+                    "value": "row['tin.value']"
+                },
+                {
+                    "property": "TIN_Type",
+                    "value": "row['tin.type']"
+                }
+            ]
+        },
+        {
+            "csvFileName": "PersonalInfo.csv",
+            "select": "'personalInfo.firstName' in row and row['personalInfo.firstName'] != '' or 'personalInfo.lastName' in row and row['personalInfo.lastName'] != '' or 'personalInfo.familyName' in row and row['personalInfo.familyName'] != ''",
+            "id": "row['personalInfo.firstName']+row['personalInfo.lastName']+'/'+row['tin.value']",
+            "label": "'Personal_Info'",
+            "uniqueKey": "row['personalInfo.firstName']+row['personalInfo.lastName']+'/'+row['tin.value']",
+            "properties": [
+                {
+                    "property": "Fraud",
+                    "dataType": "Bool",
+                    "value": "row['personalInfo.firstName']+row['personalInfo.lastName']+'/'+row['tin.value']"
+                },
+                {
+                    "property": "First_Name",
+                    "value": "row['personalInfo.firstName']"
+                },
+                {
+                    "property": "Last_Name",
+                    "value": "row['personalInfo.lastName']"
+                },
+                {
+                    "property": "Family_Name",
+                    "value": "row['personalInfo.familyName']"
+                }
+            ]
+        },
+        {
+            "csvFileName": "Phone.csv",
+            "select": "'personalInfo.phone.mobile' in row and row['personalInfo.phone.mobile'] != ''",
+            "id": "row['personalInfo.phone.mobile']",
+            "label": "'Phone'",
+            "uniqueKey": "row['personalInfo.phone.mobile']",
+            "properties": [
+                {
+                    "property": "Fraud",
+                    "dataType": "Bool",
+                    "value": "row['personalInfo.phone.mobile']"
+                }
+            ]
+        },
+        {
+            "csvFileName": "Phone.csv",
+            "select": "'personalInfo.phone.office' in row and row['personalInfo.phone.office'] != ''",
+            "id": "row['personalInfo.phone.office']",
+            "label": "'Phone'",
+            "uniqueKey": "row['personalInfo.phone.office']",
+            "properties": [
+                {
+                    "property": "Fraud",
+                    "dataType": "Bool",
+                    "value": "row['personalInfo.phone.office']"
+                }
+            ]
+        },
+        {
+            "csvFileName": "Email.csv",
+            "select": "'personalInfo.email' in row and row['personalInfo.email'] != ''",
+            "id": "row['personalInfo.email']",
+            "label": "'Email'",
+            "uniqueKey": "row['personalInfo.email']",
+            "properties": [
+                {
+                    "property": "Fraud",
+                    "dataType": "Bool",
+                    "value": "row['personalInfo.email']"
+                }
+            ]
+        },
+        {
+            "csvFileName": "Application.csv",
+            "select": "'applicationNumber' in row and row['applicationNumber'] != ''",
+            "id": "row['applicationNumber']",
+            "label": "'Application_Number'",
+            "uniqueKey": "row['applicationNumber']",
+            "properties": [
+                {
+                    "property": "Fraud",
+                    "dataType": "Bool",
+                    "value": "row['applicationNumber']"
+                }
+            ]
+        },
+        {
+            "csvFileName": "IP.csv",
+            "select": "'deviceInfo.ipAddress' in row and row['deviceInfo.ipAddress'] != ''",
+            "id": "row['deviceInfo.ipAddress']",
+            "label": "'IP'",
+            "uniqueKey": "row['deviceInfo.ipAddress']",
+            "properties": [
+                {
+                    "property": "Fraud",
+                    "dataType": "Bool",
+                    "value": "row['deviceInfo.ipAddress']"
+                }
+            ]
+        }
+        
+    ],
+    "edges": [
+        {
+            "csvFileName": "EntityId_To_Application_Edges.csv",
+            "select": "'entityId' in row and row['entityId'] != '' and 'applicationNumber' in row and row['applicationNumber'] != ''",
+            "id": "uuid()",
+            "label": "'IN_APPLICATION'",
+            "from": "row['entityId']",
+            "to": "row['applicationNumber']",
+            "fromLabel": "'Entity_Id'",
+            "toLabel": "'Application_Number'",
+            "properties": []
+        },
+        {
+            "csvFileName": "Phone_To_EntityId.csv",
+            "select": "'entityId' in row and row['entityId'] != '' and 'personalInfo.phone.mobile' in row and row['personalInfo.phone.mobile'] != ''",
+            "id": "uuid()",
+            "label": "'PHONE_OF'",
+            "from": "row['personalInfo.phone.mobile']",
+            "to": "row['entityId']",
+            "fromLabel": "'Phone'",
+            "toLabel": "'Entity_Id'",
+            "properties": []
+        },
+        {
+            "csvFileName": "Phone_To_EntityId.csv",
+            "select": "'entityId' in row and row['entityId'] != '' and 'personalInfo.phone.office' in row and row['personalInfo.phone.office'] != ''",
+            "id": "uuid()",
+            "label": "'PHONE_OF'",
+            "from": "row['personalInfo.phone.office']",
+            "to": "row['entityId']",
+            "fromLabel": "'Phone'",
+            "toLabel": "'Entity_Id'",
+            "properties": []
+        },
+        {
+            "csvFileName": "Email_To_EntityId.csv",
+            "select": "'entityId' in row and row['entityId'] != '' and 'personalInfo.email' in row and row['personalInfo.email'] != ''",
+            "id": "uuid()",
+            "label": "'EMAIL_OF'",
+            "from": "row['personalInfo.email']",
+            "to": "row['entityId']",
+            "fromLabel": "'Email'",
+            "toLabel": "'Entity_Id'",
+            "properties": []
+        },
+        {
+            "csvFileName": "TIN_To_EntityId.csv",
+            "select": "'entityId' in row and row['entityId'] != '' and 'tin.value' in row and row['tin.value'] != ''",
+            "id": "uuid()",
+            "label": "'TIN_OF'",
+            "from": "row['tin.value']",
+            "to": "row['entityId']",
+            "fromLabel": "'TIN'",
+            "toLabel": "'Entity_Id'",
+            "properties": []
+        },
+        {
+            "csvFileName": "PersonalInfo_To_EntityId.csv",
+            "select": "'entityId' in row and row['entityId'] != '' and 'personalInfo.firstName' in row and row['personalInfo.firstName'] != '' or 'personalInfo.lastName' in row and row['personalInfo.lastName'] != '' or 'personalInfo.familyName' in row and row['personalInfo.familyName'] != ''",
+            "id": "uuid()",
+            "label": "'PERSONAL_INFO_OF'",
+            "from": "row['personalInfo.firstName']+row['personalInfo.lastName']+'/'+row['tin.value']",
+            "to": "row['entityId']",
+            "fromLabel": "'Personal_Info'",
+            "toLabel": "'Entity_Id'",
+            "properties": []
+        },
+        {
+            "csvFileName": "Application_To_IP.csv",
+            "select": "'deviceInfo.ipAddress' in row and row['deviceInfo.ipAddress'] != '' and 'applicationNumber' in row and row['applicationNumber'] != ''",
+            "id": "uuid()",
+            "label": "'IN_IP'",
+            "from": "row['applicationNumber']",
+            "to": "row['deviceInfo.ipAddress']",
+            "fromLabel": "'Application_Number'",
+            "toLabel": "'IP'",
+            "properties": []
+        }
+
+    ]
+}
